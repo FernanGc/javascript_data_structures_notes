@@ -90,7 +90,7 @@ clear() {
 ## A JavaScript object-based Stack class
 
 ````javascript
-class Stack {
+export default class Stack {
     constructor() {
         this.count = 0; // To keep track of the size of the stack
         this.items = {};
@@ -116,7 +116,7 @@ class Stack {
     // Popping elements from the stack
     /**
      * {1} Verify whether the stack is empty, if so, we return the value undefined
-     * {2} IF the stack is not empty, we will decrement the count property
+     * {2} If the stack is not empty, we will decrement the count property
      * {3} Store the value from the top of the stack so we can return it
      * {4} remove the element at the top
      * {5} return the element
@@ -180,4 +180,99 @@ console.log(stack.peek()); // outputs 8
 ````
 
 # Solving problems using stacks
+
+### Decimal to Binary
+
+```javascript
+import Stack from './modules/stack.js';
+
+/**
+ * To convent a decimal number into a binary representation,
+ * we can divide the number by 2 (binary is a base 2 number system)
+ * until the divison result is 0.
+ * As example we will convert the number 10 into binary digits:
+ * 
+ * 10/2 == 5 rem == 0
+ * 5/2  == 2 rem == 1
+ * 2/2  == 1 rem == 0
+ * 1/2  == 0 rem == 1
+ * 
+ * push iteration ===>
+ * [0] [1] [0] [1]
+ * 
+ * <=== output = pop remainders
+ * [1] [0] [1] [0]
+ */
+
+function decimalToBinary(decNumber) {
+    const remStack = new Stack();
+    let number = decNumber;
+    let rem;
+    let binaryString = '';
+
+    while (number > 0) { // {1}
+        rem = Math.floor(number % 2); // {2}
+        remStack.push(rem); // {3}
+        number = Math.floor(number / 2); // {4}
+    }
+
+    while (!remStack.isEmpty()) { // {5}
+        binaryString += remStack.pop().toString();
+    }
+
+    return binaryString;
+}
+
+/**
+ * {1} while the division result is not zero, we get the remainder of the division.
+ * {2},{3} Push the remainder to the stack
+ * {4} We update the number that will be divided by 2
+ * {5} We pop the elements from the stack until it is empty, concatenating
+ * the elements that were removed from the stack into a string.
+ */
+
+ console.log(decimalToBinary(233));
+ console.log(decimalToBinary(10));
+ console.log(decimalToBinary(1000));
+```
+
+### The base converter algorithm
+
+````javascript
+// convert from decimal to the bases between 2 and 36
+function baseConverter(decNumber, base) {
+    const remStack = new Stack();
+    const digits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // {6} 
+    let number = decNumber;
+    let rem;
+    let baseString = '';
+
+    if (!(base >= 2 && base <= 36)) {
+    	return '';
+    }
+
+    while (number > 0) {
+        rem = Math.floor(number % base);
+        remStack.push(rem);
+        number = Math.floor(number / base);
+    }
+
+    while (!remStack.isEmpty()) {
+    	baseString += digits[remStack.pop()]; // {7}
+    } 
+
+    return baseString;
+}
+
+console.log(baseConverter(100345, 2)); // 11000011111111001
+console.log(baseConverter(100345, 8)); // 303771
+console.log(baseConverter(100345, 16)); // 187F9
+console.log(baseConverter(100345, 35)); // 2BW0
+````
+
+> There is one more thing we need to change. In the conversion from 
+> decimal to binary, the remainders will be 0 or 1; in the conversion from
+> decimal to octagonal, the remainders will be from 0 to 8; and in the 
+> conversion from decimal to hexadecimal, the remainders can be 0 to 9 
+> plus the letters `A` to `F` (values 10 to 15). For this reason, we need to convert these values as well (lines `{6}` and `{7}`). So, starting at base 11, each letter of the alphabet will represent its base. The letter `A` represents base 11, `B` represents base 12, and so on.
 
