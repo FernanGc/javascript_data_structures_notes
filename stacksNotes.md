@@ -1,3 +1,5 @@
+
+
 # Stacks Notes | Data Structures
 
 #### Creating an array-based Stack class
@@ -12,8 +14,6 @@ class Stack {
 ````
 
 > The array data structure allows to add or remove elements from any position in the data structure, but we limit the functionalities to follow the LIFO principle.
-
-
 
 #### Pushing elements to the stack
 
@@ -183,26 +183,32 @@ console.log(stack.peek()); // outputs 8
 
 ### Decimal to Binary
 
+> To convent a decimal number into a binary representation, we can divide the number by 2 (binary is a base 2 number system) until the divison result is 0. As example we will convert the number 10 into binary digits:
+
+````pseudocode
+10/2 == 5 rem == 0
+5/2  == 2 rem == 1
+2/2  == 1 rem == 0
+1/2  == 0 rem == 1
+
+push iteration ===>
+[0] [1] [0] [1]
+<=== output = pop remainders
+[1] [0] [1] [0]	
+````
+
+
+> **{1}** While the division result is not zero, we get the remainder of the division.
+>
+> **{2}, {3}** Push the remainder to the stack
+>
+> **{4}** We update the number that will be divided by 2
+>
+> {**5}** We pop the elements from the stack until it is empty, concatenating the elements that were removed from the stack into a string.
+
+
 ```javascript
 import Stack from './modules/stack.js';
-
-/**
- * To convent a decimal number into a binary representation,
- * we can divide the number by 2 (binary is a base 2 number system)
- * until the divison result is 0.
- * As example we will convert the number 10 into binary digits:
- * 
- * 10/2 == 5 rem == 0
- * 5/2  == 2 rem == 1
- * 2/2  == 1 rem == 0
- * 1/2  == 0 rem == 1
- * 
- * push iteration ===>
- * [0] [1] [0] [1]
- * 
- * <=== output = pop remainders
- * [1] [0] [1] [0]
- */
 
 function decimalToBinary(decNumber) {
     const remStack = new Stack();
@@ -222,24 +228,21 @@ function decimalToBinary(decNumber) {
 
     return binaryString;
 }
+```
 
-/**
- * {1} while the division result is not zero, we get the remainder of the division.
- * {2},{3} Push the remainder to the stack
- * {4} We update the number that will be divided by 2
- * {5} We pop the elements from the stack until it is empty, concatenating
- * the elements that were removed from the stack into a string.
- */
+#### Using the dicimalToBinary function
 
+````javascript
  console.log(decimalToBinary(233));
  console.log(decimalToBinary(10));
  console.log(decimalToBinary(1000));
-```
+````
 
 ### The base converter algorithm
 
+> Convert from decimal to the bases between 2 and 36. In the conversion from  decimal to binary, the remainders will be 0 or 1; in the conversion from decimal to octagonal, the remainders will be from 0 to 8; and in the  conversion from decimal to hexadecimal, the remainders can be 0 to 9  plus the letters `A` to `F` (values 10 to 15). For this reason, we need to convert these values as well (lines `{6}` and `{7}`). So, starting at base 11, each letter of the alphabet will represent its base. The letter `A` represents base 11, `B` represents base 12, and so on.
+
 ````javascript
-// convert from decimal to the bases between 2 and 36
 function baseConverter(decNumber, base) {
     const remStack = new Stack();
     const digits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // {6} 
@@ -263,16 +266,13 @@ function baseConverter(decNumber, base) {
 
     return baseString;
 }
+````
 
+#### Using the baseConverter function
+
+````javascript
 console.log(baseConverter(100345, 2)); // 11000011111111001
 console.log(baseConverter(100345, 8)); // 303771
 console.log(baseConverter(100345, 16)); // 187F9
 console.log(baseConverter(100345, 35)); // 2BW0
 ````
-
-> There is one more thing we need to change. In the conversion from 
-> decimal to binary, the remainders will be 0 or 1; in the conversion from
-> decimal to octagonal, the remainders will be from 0 to 8; and in the 
-> conversion from decimal to hexadecimal, the remainders can be 0 to 9 
-> plus the letters `A` to `F` (values 10 to 15). For this reason, we need to convert these values as well (lines `{6}` and `{7}`). So, starting at base 11, each letter of the alphabet will represent its base. The letter `A` represents base 11, `B` represents base 12, and so on.
-
